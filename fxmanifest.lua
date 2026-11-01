@@ -31,5 +31,14 @@ description 'Drop-in wrapper: resolves @qb-core/... file includes to qbcore'
 dependency 'kora_core'
 
 files {
-    'shared/locale.lua'
+    'config.lua',
+    'shared/_forward.lua',
+    'shared/locale.lua',
+    'shared/main.lua',
+    'shared/items.lua',
+    'shared/jobs.lua',
+    'shared/gangs.lua',
+    'shared/vehicles.lua',
+    'shared/weapons.lua',
+    'shared/locations.lua'
 }

@@ -9,6 +9,6 @@
 -- included us gets kora_core's file loaded into ITS VM via the load below.
 -- Identical technique to kora_sql/stubs/oxmysql/lib/MySQL.lua.
 local chunk = LoadResourceFile('kora_core', 'shared/locale.lua')
-assert(chunk, '[qb-core-wrapper] could not read qbcore/shared/locale.lua -- is kora_core present?')
+assert(chunk, '[qb-core-wrapper] could not read kora_core/shared/locale.lua -- is kora_core present?')
 local fn = assert(load(chunk, '@kora_core/shared/locale.lua'))
 fn()

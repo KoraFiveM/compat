@@ -76,7 +76,6 @@ default('ChangeVehicleExtra', function(vehicle, extra, enable)
 end)
 
 default('SetDefaultVehicleExtras', function(vehicle, config)
-    -- Disable every extra first, then enable the configured ones.
     for i = 1, 20 do
         if DoesExtraExist(vehicle, i) then SetVehicleExtra(vehicle, i, true) end
     end

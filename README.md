@@ -3,9 +3,8 @@
 A wrapper resource whose only job is to **occupy the resource name `qb-core`**
 so that legacy scripts' `@qb-core/...` file includes resolve.
 
-It contains no framework logic. The real implementation is
-[qbcore2/qbcore](https://github.com/qbcore2/qbcore); this resource forwards to
-it.
+It contains no framework logic. The real implementation is `kora_core`; this
+resource forwards to it.
 
 ## The problem it solves
 
@@ -47,7 +46,7 @@ consumer's own code:
 duplicating it:
 
 ```lua
-local chunk = LoadResourceFile('qbcore', 'shared/locale.lua')
+local chunk = LoadResourceFile('kora_core', 'shared/locale.lua')
 local fn = assert(load(chunk, '@kora_core/shared/locale.lua'))
 fn()
 ```
@@ -57,6 +56,42 @@ manifest — is the load-bearing detail: the consumer's include runs this file *
 the consumer's VM**, so the `Locale` global it defines lands where the consumer
 can see it. A `shared_script` in this manifest would instead run it in *this*
 resource's VM, where nothing needs it.
+
+## Forwarded files
+
+| Include | Defines (in the consumer's VM) |
+|---|---|
+| `@qb-core/shared/locale.lua` | `Locale` / `Lang` (kora_core's implementation) |
+| `@qb-core/shared/main.lua` | `QBShared` helpers (`RandomStr`, `RandomInt`, `SplitStr`, `Trim`, `FirstToUpper`, `Round`, `IsFunction`, `ChangeVehicleExtra`, `SetDefaultVehicleExtras`) plus `StarterItems`, `MaleNoGloves`, `FemaleNoGloves` |
+| `@qb-core/shared/items.lua` | `QBShared.Items` |
+| `@qb-core/shared/jobs.lua` | `QBShared.Jobs` (stock zero-based string grades) |
+| `@qb-core/shared/gangs.lua` | `QBShared.Gangs` |
+| `@qb-core/shared/vehicles.lua` | `QBShared.Vehicles`, `QBShared.VehicleHashes` |
+| `@qb-core/shared/weapons.lua` | `QBShared.Weapons` |
+| `@qb-core/shared/locations.lua` | `QBShared.Locations` |
+| `@qb-core/config.lua` | `QBConfig` (kora_core's `QBCore.Config`) |
+
+Data is pulled at load time from kora_core's `exports['qb-core']:GetShared` /
+`GetCoreObject`. It is a **snapshot** taken when the consumer loads; scripts
+that need live changes should call the export again. If kora_core is not
+started yet the tables are empty and a warning is printed. Other files from the
+real qb-core (`client/`, `server/`) are not forwarded; use
+`exports['qb-core']:GetCoreObject()` for those.
+
+## Single source of truth
+
+This resource is the only `qb-core` resource that should exist. A separate,
+older copy cloned from `qbcore2/qb-core` may be present on servers (typically in
+a `[compat]` folder next to a copy in `[test]`); it collides on the resource
+name and **must be removed**.
+
+## Tests
+
+```sh
+bash test/run.sh
+```
+
+Plain Lua with mocks; no server needed.
 
 ## Install
 
@@ -68,5 +103,8 @@ ensure kora_core
 ensure qb-core
 ensure qb-banking
 ```
+
+The order is required: `qb-core` must be `ensure`d after `kora_core` and before
+any qb script that includes `@qb-core/...`.
 
 Do not run a real qb-core alongside this.

@@ -1,0 +1,7 @@
+# These trees are byte-pinned to upstream ox_lib. Preserve their original
+# whitespace exactly; test/upstream.sh verifies the aggregate source hash.
+NOTICE.md -whitespace
+init.lua -whitespace
+imports/** -whitespace
+locales/** -whitespace
+modules/** -whitespace

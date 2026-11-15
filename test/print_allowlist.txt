@@ -1,0 +1,5 @@
+# Path[:reason]. A trailing "/" exempts a whole directory. Reasons are required.
+ox_lib/:Upstream ox_lib 3.39.0 (overextended/ox_lib, see ox_lib/UPSTREAM_VERSION). Vendored library code; its print API and debug output are upstream behaviour.
+PolyZone/:Upstream PolyZone (see PolyZone/NOTICE.md). Vendored library code.
+qb-core/shared/_forward.lua:Runs in the consumer's VM via LoadResourceFile. Legacy consumers may not load @kora_lib/init.lua, so Kora.logging may be absent. Same reason as kora_core shared/locale.lua.
+qb-core/test/:Test harness output.
